@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,16 +19,24 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    //A reference to the ListView widget from the layout xml file
+    private ListView listOfSongsToDisplayInUI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Get a reference to the ListView widget from the layout xml file
+        listOfSongsToDisplayInUI = (ListView) findViewById(R.id.listOfSongs);
+
         Log.d(TAG, "onCreate: Starting Async Task");
         DownloadData d = new DownloadData();
         d.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=10/xml");
         Log.d(TAG, "onCreate: done");
+
+//        ParseApps p = new ParseApps();
+//        p.parseXmlData();
 
     }
 
@@ -101,6 +111,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             Log.d(TAG, "onPostExecute: parameter is \n" + s);
+
+            ParseApps p = new ParseApps();
+            p.parseXmlData(s);
+
+            //Binds the ListView on the layout to the ArrayAdapter.
+            //ArrayAdapter converts each object in the collection to a TextView, and provides it on the fly when the ListView
+            //requests the adapter for a new View
+            ArrayAdapter<FeedEntry> adapter = new ArrayAdapter<>(MainActivity.this,R.layout.list_item,p.getApps());
+
+            //Sets the ListView's adapter to the one declared.
+            listOfSongsToDisplayInUI.setAdapter(adapter);
         }
     }
 }

@@ -60,9 +60,11 @@ public class FeedEntry {
 
     @Override
     public String toString() {
-        return "Title: " + this.title + "\n" +
+        return  "Title: " + this.title + "\n" +
                 "Artist: " + this.artist + "\n" +
-                "Song: " + this.name + "\n" +
+                "Track Name: " + this.name + "\n" +
+                "Category: " + this.category + "\n" +
+                "Image URL: " + this.imageUrl + "\n" +
                 "Price: " + this.price;
     }
 }
